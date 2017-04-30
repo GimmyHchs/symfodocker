@@ -11,10 +11,14 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     php:
-        build: php7-fpm
+        build:
+            context: ./php7-fpm
+            args:
+                - NODE_VERSION=v7.9.0
         volumes:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
             - ./logs/symfony:/var/www/symfony/app/logs
+
     nginx:
         build: nginx
         ports:
@@ -33,3 +37,6 @@ services:
         volumes_from:
             - php
             - nginx
+volumes:
+    db:
+        driver: "local"

@@ -35,4 +35,18 @@ RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-x
 RUN echo 'alias sf="php app/console"' >> ~/.bashrc
 RUN echo 'alias sf3="php bin/console"' >> ~/.bashrc
 
+# Install nvm with node and npm
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+ENV NVM_DIR /usr/local/nvm
+ARG NODE_VERSION=v7.9.0
+
+RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash \
+    && source $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
+
 WORKDIR /var/www/symfony
